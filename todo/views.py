@@ -82,12 +82,23 @@ def create_todo(request):
 @login_required
 def current_todos(request):
     todos = Todo.objects.filter(
-        user=request.user, date_completed__isnull=True).order_by('-date_created')
+        user=request.user, date_completed__isnull=True)
     context = {
         'todos': todos,
     }
 
     return render(request, 'pages/currenttodos.html', context)
+
+
+@login_required
+def completed_todos(request):
+    todos = Todo.objects.filter(
+        user=request.user, date_completed__isnull=False).order_by('-date_created')
+    context = {
+        'todos': todos,
+    }
+
+    return render(request, 'pages/completedtodos.html', context)
 
 
 @login_required

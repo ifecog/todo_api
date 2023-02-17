@@ -50,7 +50,9 @@
               <a class="nav-link" href="{% url 'current_todos' %}">Current</a>
             </li>
             <li class="nav-item {{ completed }}">
-              <a class="nav-link" href="#">Completed</a>
+              <a class="nav-link" href="{% url 'completed_todos' %}"
+                >Completed</a
+              >
             </li>
             <li class="nav-item {{ create }}">
               <a class="nav-link" href="{% url 'create_todo' %}">Create</a>

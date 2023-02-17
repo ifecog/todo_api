@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -21,3 +22,8 @@ class Todo(models.Model):
 
     def get_url(self):
         return reverse('todo_detail', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(*args, **kwargs)

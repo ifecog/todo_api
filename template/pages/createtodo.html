@@ -8,9 +8,9 @@
 </div>
 <div class="row justify-content-center mt-5">
   <div class="col-md-5">
-    {% if error %}
+    {% comment %} {% if error %}
     <div class="alert alert-danger" role="alert">{{ error }}</div>
-    {% endif %}
+    {% endif %} {% endcomment %}
     <form method="POST">
       {% csrf_token %}
       <div class="form-group">
@@ -24,27 +24,17 @@
         />
       </div>
       <div class="form-group">
-        <label for="title">Slug</label>
-        <input
-          type="text"
-          name="slug"
-          class="form-control"
-          id="title"
-          required
-        />
-      </div>
-      <div class="form-group">
         <label for="memo">Memo</label>
         <textarea name="memo" class="form-control" id="memo"></textarea>
       </div>
       <div class="form-group form-check">
         <input
           type="checkbox"
-          name="important"
+          name="crucial"
           class="form-check-input"
-          id="important"
+          id="crucial"
         />
-        <label class="form-check-label" for="important">Important</label>
+        <label class="form-check-label" for="important">Crucial</label>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
