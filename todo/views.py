@@ -3,6 +3,7 @@ from .models import Todo
 from .forms import TodoForm
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib import auth
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.utils import timezone
@@ -50,4 +51,75 @@ def signin(request):
             auth.login(request, user)
             return redirect(home)
         else:
-            return render(request, 'accounts/signin.html')
+            return redirect(signin)
+
+    return render(request, 'accounts/signin.html')
+
+
+@login_required
+def signout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect(home)
+
+
+@login_required
+def create_todo(request):
+    context = {
+        'form': TodoForm(),
+        'error': 'Bad data passed in. Try again.',
+    }
+    try:
+        form = TodoForm(request.POST)
+        new_todo = form.save(commit=False)
+        new_todo.user = request.user
+        new_todo.save()
+        return redirect(current_todos)
+    except ValueError:
+        return render(request, 'pages/createtodo.html', context)
+
+
+@login_required
+def current_todos(request):
+    todos = Todo.objects.filter(
+        user=request.user, date_completed__isnull=True).order_by('-date_created')
+    context = {
+        'todos': todos,
+    }
+
+    return render(request, 'pages/currenttodos.html', context)
+
+
+@login_required
+def todo_detail(request, todo_slug):
+    single_todo = get_object_or_404(Todo, slug=todo_slug, user=request.user)
+    form = TodoForm(instance=single_todo)
+
+    context = {
+        'todo': single_todo,
+        'form': form,
+        'error': 'Bad Info',
+    }
+
+    try:
+        form = TodoForm(request.POST, instance=single_todo)
+        form.save()
+        return redirect(current_todos)
+    except ValueError:
+        return render(request, 'pages/tododetail.html', context)
+
+
+@login_required
+def complete_todo(request, todo_slug):
+    todo = get_object_or_404(Todo, slug=todo_slug, user=request.user)
+    if request.method == 'POST':
+        todo.date_completed = timezone.now()
+        todo.save()
+        return redirect(current_todos)
+
+
+def delete_todo(request, todo_slug):
+    todo = get_object_or_404(Todo, slug=todo_slug, user=request.user)
+    if request.method == 'POST':
+        todo.delete()
+        return redirect(current_todos)

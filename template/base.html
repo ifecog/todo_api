@@ -18,7 +18,7 @@
     />
 
     <link rel="icon" type="image/png" href="{% static 'todo/logo.png' %}" />
-    <title>Todo Woo</title>
+    <title>{% block title %}{% endblock title %}</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-warning">
@@ -47,13 +47,13 @@
           {% if user.is_authenticated %}
           <ul class="navbar-nav mr-auto">
             <li class="nav-item {{ current }}">
-              <a class="nav-link" href="#">Current</a>
+              <a class="nav-link" href="{% url 'current_todos' %}">Current</a>
             </li>
             <li class="nav-item {{ completed }}">
               <a class="nav-link" href="#">Completed</a>
             </li>
             <li class="nav-item {{ create }}">
-              <a class="nav-link" href="#">Create</a>
+              <a class="nav-link" href="{% url 'create_todo' %}">Create</a>
             </li>
           </ul>
           {% endif %}
@@ -61,19 +61,23 @@
             {% if user.is_authenticated %}
             <li class="nav-item">
               <a href="#" onclick="$('#signOutBtn').click()" class="nav-link"
-                >Logout</a
+                >Signout</a
               >
-              <form style="display: none" method="POST" action="#">
+              <form
+                style="display: none"
+                method="POST"
+                action="{% url 'signout' %}"
+              >
                 {% csrf_token %}
-                <button id="signOutBtn" type="submit">Logout</button>
+                <button id="signOutBtn" type="submit">Signout</button>
               </form>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Sign Up</a>
+              <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
+              <a class="nav-link" href="{% url 'signin' %}">Signin</a>
             </li>
             {% endif %}
           </ul>
