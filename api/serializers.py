@@ -7,6 +7,6 @@ from todo.models import Todo
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
-        fields = ('user', 'title', 'crucial', 'memo',
-                  'date_cvreated', 'date_completed')
-        read_only_fields = ['date_created', 'days_completed']
+        fields = ('id', 'user', 'title', 'crucial', 'memo',
+                  'date_created', 'date_completed')
+        read_only_fields = ['date_created', 'date_completed']
